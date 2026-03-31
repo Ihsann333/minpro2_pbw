@@ -2,7 +2,9 @@
 include 'koneksi.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
-$query = mysqli_query($conn, "SELECT * FROM sertifikat");
+
+$profile = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM profile"));
+$sertifikat = mysqli_query($conn, "SELECT * FROM sertifikat");
 ?>
 
 <!DOCTYPE html>
@@ -27,91 +29,52 @@ $query = mysqli_query($conn, "SELECT * FROM sertifikat");
 <section class="hero">
   <div class="hero-left">
     <p>Hello, I'm</p>
-    <h1>Nur Ihsan</h1>
-    <h2>Creative Designer & Video Editor</h2>
+    <h1><?php echo $profile['nama']; ?></h1>
+    <h2><?php echo $profile['role']; ?></h2>
 
     <p class="desc">
-      Mahasiswa Sistem Informasi yang berfokus pada desain visual kreatif,
-      UI/UX website, serta video editing menggunakan perangkat mobile.
+      <?php echo $profile['deskripsi']; ?>
     </p>
   </div>
 
   <div class="hero-right">
-    <img src="img/foto.png">
+    <img src="img/<?php echo $profile['foto']; ?>">
   </div>
 </section>
 <?php } ?>
 
 <!-- ABOUT -->
-<?php if($page == 'about') { ?>
+<?php if($page == 'about') { 
+
+$profile2 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM profile"));
+
+?>
 <section class="about">
 
-  <!-- FOTO (INI YANG KAMU HILANGIN TADI) -->
   <div class="about-left">
-    <img src="img/foto.png">
+    <img src="img/<?php echo $profile2['foto']; ?>">
   </div>
 
   <div class="about-right">
     <h1>About Me</h1>
 
-    <p>
-      Saya adalah mahasiswa Sistem Informasi yang memiliki ketertarikan pada 
-      desain visual kreatif dan video editing.
-    </p>
+    <p><?php echo $profile2['deskripsi_about']; ?></p>
 
-    <p>
-      Saya menikmati proses mengerjakan proyek yang berhubungan dengan desain,
-      seperti merancang UI/UX untuk website agar tampil menarik dan mudah digunakan.
-    </p>
-
-    <p>
-      Dalam bidang video editing, saya menggunakan CapCut dan Alight Motion 
-      untuk menghasilkan konten yang lebih maksimal.
-    </p>
-
-    <!-- SKILL BAR -->
     <div class="skills">
-
-      <div class="skill-item">
-        <div class="skill-header">
-          <span>Canva</span>
-          <span>90%</span>
+      <?php 
+      $skills = mysqli_query($conn, "SELECT * FROM skill");
+      while($s = mysqli_fetch_assoc($skills)) { 
+      ?>
+        <div class="skill-item">
+          <div class="skill-header">
+            <span><?php echo $s['nama']; ?></span>
+            <span><?php echo $s['persen']; ?>%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar" style="width: <?php echo $s['persen']; ?>%"></div>
+          </div>
         </div>
-        <div class="progress">
-          <div class="progress-bar" style="width: 90%"></div>
-        </div>
-      </div>
-
-      <div class="skill-item">
-        <div class="skill-header">
-          <span>Figma</span>
-          <span>80%</span>
-        </div>
-        <div class="progress">
-          <div class="progress-bar" style="width: 80%"></div>
-        </div>
-      </div>
-
-      <div class="skill-item">
-        <div class="skill-header">
-          <span>CapCut</span>
-          <span>85%</span>
-        </div>
-        <div class="progress">
-          <div class="progress-bar" style="width: 85%"></div>
-        </div>
-      </div>
-
-      <div class="skill-item">
-        <div class="skill-header">
-          <span>Alight Motion</span>
-          <span>75%</span>
-        </div>
-        <div class="progress">
-          <div class="progress-bar" style="width: 75%"></div>
-        </div>
-      </div>
-
+      <?php } ?>
     </div>
 
   </div>
@@ -125,7 +88,7 @@ $query = mysqli_query($conn, "SELECT * FROM sertifikat");
   <h1>Certificates</h1>
 
   <div class="cards">
-    <?php while($row = mysqli_fetch_assoc($query)) { ?>
+    <?php while($row = mysqli_fetch_assoc($sertifikat)) { ?>
       <div class="card">
         <img src="img/<?php echo $row['gambar']; ?>">
       </div>
